@@ -3,7 +3,7 @@ import csv
 from bs4 import BeautifulSoup
 import urllib.request,urllib.error
 from urllib.request import Request, urlopen
-def getaddphoareaimg( url ):
+def getaddphoareaimg( url ):                                                        # Working in the inner pages of the website
     inner_page = urlopen(Request(url,headers=hdr))
     inner_html=inner_page.read()
     inner_page.close()
@@ -26,7 +26,7 @@ def getaddphoareaimg( url ):
         count+=1
     return details
 
-def scrapping(soup):
+def scrapping(soup):                                                                 # working on the outer pages/Homepage
     tags=soup.findAll("div",{"class":"place-square"})
     records=[]
     records.append(["Name","Image URL","Address","Phone No","Area"])
@@ -40,7 +40,7 @@ def scrapping(soup):
         records.append(all_details)
     return records
 
-if __name__ == "__main__":
+if __name__ == "__main__":                                                          #this is where the program starts getting executed
     url = 'https://downtowndallas.com/experience/stay/'
     hdr = {'User-Agent': 'Mozilla/5.0'}
     page = urlopen(Request(url, headers=hdr))
@@ -48,21 +48,19 @@ if __name__ == "__main__":
     page.close()
     soup = BeautifulSoup(html, 'html.parser')
     title=soup.title.string
-    if(os.path.exists('./'+title+'.csv') and os.path.isfile('./'+title+'.csv')):
+    if(os.path.exists('./'+title+'.csv') and os.path.isfile('./'+title+'.csv')):    # Deleting so as to make that same updated file
         os.remove('./'+title+'.csv')
-    records=scrapping(soup)
+    records=scrapping(soup)                                                         # Record stores a list of list of all details
     flag=0;
-#     for record in records:
-#         print(record)
-    with open(title+'.csv', 'w', newline='') as entry:
+    with open(title+'.csv', 'w', newline='') as entry:                              # storing the records/details that we get in a new csv file
         writer = csv.writer(entry)
         for record in records:
             writer.writerow(record)
-            if os.path.exists( './'+title+' Images')==False:
-                os.mkdir( title+' Images')
+            if os.path.exists( './'+title+' Images')==False:                        # creating a new folder
+                os.mkdir( title+' Images')                                          
             if flag:
                 opener = urllib.request.URLopener()
                 opener.addheader('User-Agent', 'hello')
-                filename, headers = opener.retrieve(record[1],str('./'+title+' Images'+'/'+record[0]+".png"))
+                filename, headers = opener.retrieve(record[1],str('./'+title+' Images'+'/'+record[0]+".png")) # saving the images in the newly created folder
             flag=1;
     print("Done!")
