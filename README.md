@@ -10,7 +10,7 @@
 > - urllib
 > - os
 > - Beautiful soup
-> -csv
+> - csv
 ### Working
 1. get the images of all the hotels 
 2. get the details like **Name**, **Image_URL**, **Address**, **Phone No**, **Area**
